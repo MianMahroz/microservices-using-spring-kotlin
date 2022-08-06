@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: delivery-deployment-v1
+spec:
+  selector:
+    matchLabels:
+      app: delivery
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: delivery
+        version: v1
+    spec:
+      containers:
+        - name: delivery
+          image: mianmahroz/delivery-service
+          ports:
+            - containerPort: 8081
+          volumeMounts:
+            - mountPath: /etc/podinfo
+              name: podinfo
+      volumes:
+        - name: podinfo
+          downwardAPI:
+            items:
+              - path: "labels"
+                fieldRef:
+                  fieldPath: metadata.labels
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: delivery-service
+spec:
+  type: ClusterIP
+  selector:
+    app: delivery
+  ports:
+    - port: 8081
+      targetPort: 8081

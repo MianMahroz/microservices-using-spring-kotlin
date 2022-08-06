@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: processor-deployment-v1
+spec:
+  selector:
+    matchLabels:
+      app: processor
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: processor
+        version: v1
+    spec:
+      containers:
+        - name: processor
+          image: mianmahroz/processor-service
+          ports:
+            - containerPort: 8085
+          volumeMounts:
+            - mountPath: /etc/podinfo
+              name: podinfo
+      volumes:
+        - name: podinfo
+          downwardAPI:
+            items:
+              - path: "labels"
+                fieldRef:
+                  fieldPath: metadata.labels
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: processor-service
+spec:
+  type: ClusterIP
+  selector:
+    app: processor
+  ports:
+    - port: 8085
+      targetPort: 8085

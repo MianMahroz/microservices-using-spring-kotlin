@@ -1,0 +1,84 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: microservices-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "microservices.example.com"
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: order-service-gateway-route
+spec:
+  hosts:
+    - "microservices.example.com"
+  gateways:
+    - microservices-gateway
+  http:
+    - match:
+        - headers:
+            X-Version:
+              exact: v1
+          uri:
+            prefix: "/order"
+      rewrite:
+        uri: " "
+      route:
+        - destination:
+            host: order-service.default.svc.cluster.local
+            subset: v1
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: demo-service-gateway-route
+spec:
+  hosts:
+    - "microservices.example.com"
+  gateways:
+    - microservices-gateway
+  http:
+    - match:
+        - headers:
+            X-Version:
+              exact: v1
+          uri:
+            prefix: "/demo"
+      rewrite:
+        uri: " "
+      route:
+        - destination:
+            host: demo-service.default.svc.cluster.local
+            subset: v1
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: kafka-service-gateway-route
+spec:
+  hosts:
+    - "microservices.example.com"
+  gateways:
+    - microservices-gateway
+  http:
+    - match:
+        - headers:
+            X-Version:
+              exact: v1
+          uri:
+            prefix: "/"
+      rewrite:
+        uri: " "
+      route:
+        - destination:
+            host: kafka-service.default.svc.cluster.local
+            subset: v1

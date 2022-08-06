@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: order-service
+management:
+  endpoints.web.exposure.include: '*'
+  endpoint:
+    health:
+      show-details: always
+#  kafka:
+#    bootstrap-servers:
+#      -  kafka-service:9092
+#    producer:
+#      bootstrap-servers: kafka-service:9092
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

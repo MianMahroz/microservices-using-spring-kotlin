@@ -1,0 +1,43 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+metadata:
+  name: using-kubernates
+build:
+  artifacts:
+  - image: mianmahroz/client-service
+    context: client-service
+    docker:
+      dockerfile: Dockerfile
+  - image: mianmahroz/delivery-service
+    context: delivery-service
+    docker:
+      dockerfile: Dockerfile
+  - image: mianmahroz/inventory-service
+    context: inventory-service
+    docker:
+      dockerfile: Dockerfile
+  - image: mianmahroz/order-service
+    context: order-service
+    docker:
+      dockerfile: Dockerfile
+  - image: mianmahroz/processor-service
+    context: processor-service
+    docker:
+      dockerfile: Dockerfile
+deploy:
+  kubectl:
+    manifests:
+    - client-service/k8s/deployment.yml
+    - client-service/k8s/istio.yml
+    - delivery-service/k8s/deployment.yml
+    - delivery-service/k8s/istio.yml
+    - inventory-service/k8s/deployment.yml
+    - inventory-service/k8s/istio.yml
+    - k8s/istio-gateway.yml
+#    - kafka-k8s/01-zookeeper.yml   manual kafka setup preferred i.e kubectl apply -f 01-zookeeper.yml
+#    - kafka-k8s/02-kafka.yaml
+#    - kafka-k8s/istio.yml
+    - order-service/k8s/deployment.yml
+    - order-service/k8s/istio.yml
+    - processor-service/k8s/deployment.yml
+    - processor-service/k8s/istio.yml

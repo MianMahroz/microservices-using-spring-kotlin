@@ -1,8 +1,0 @@
-#for java base producer config , refer below link
-# https://github.com/MianMahroz/Spring-Kotlin-Kafka-Examples/blob/main/cloud-Streams-Functional-Order-Service/src/main/kotlin/com/mahroz/kafka/kotlin/spring_cloud_streams/config/ProducerConfig.kt
-spring:
-  kafka:
-    producer:
-      bootstrap-servers: localhost:9092
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
